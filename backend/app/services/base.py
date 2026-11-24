@@ -21,11 +21,17 @@ def _ensure_dir(path: Path) -> None:
 class BaseModuleService:
     MODULE = ""
     ENTITY = ""
+    OPERATION_TERM = ""
     LIST_FIELDS: list[str] = []
     REQUIRED_FIELDS: list[str] = []
     STATUS_ORDER: list[str] = []
     ACTION_RULES: dict[str, str] = {}
     NEGATIVE_ACTIONS: list[str] = []
+
+    def __init__(self, data_root: str | Path | None = None, *, data_dir: str | Path | None = None, **kwargs: Any) -> None:
+        # 允许测试/调用方为单个服务实例指定产物根目录；不传时沿用全局 DATA_ROOT。
+        root = data_root or data_dir or kwargs.get("root")
+        self._data_root_override = Path(root) if root is not None else None
 
     # -- 基础 CRUD --
 
@@ -104,7 +110,9 @@ class BaseModuleService:
     # -- 文件 IO 工具 --
 
     def _data_dir(self, sub: str) -> Path:
-        p = DATA_ROOT / sub
+        override = self.__dict__.get("_data_root_override")
+        root = Path(override) if override is not None else DATA_ROOT
+        p = root / sub
         _ensure_dir(p)
         return p
 
@@ -117,6 +125,14 @@ class BaseModuleService:
                 f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
                 written += 1
         return written
+
+    def _write_jsonl_overwrite(self, filepath: Path, records: list[dict[str, Any]]) -> int:
+        """覆盖写入完整JSONL产物，避免重建批次时把多版输入重复追加。"""
+        _ensure_dir(filepath.parent)
+        with open(filepath, "w", encoding="utf-8") as f:
+            for rec in records:
+                f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+        return len(records)
 
     def _read_jsonl(self, filepath: Path) -> list[dict[str, Any]]:
         """从JSONL文件读取全部记录并返回字典列表。"""

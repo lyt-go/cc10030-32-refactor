@@ -1,0 +1,36 @@
+{
+  "batch_key": "B-CASE",
+  "current_version": 2,
+  "versions": {
+    "1": {
+      "version": 1,
+      "file": "/workspace/data/track_segments/B-CASE_segments.1.jsonl",
+      "canonical_file": "/workspace/data/track_segments/B-CASE_segments.jsonl",
+      "segment_ids": [
+        "B1",
+        "B2",
+        "B3"
+      ],
+      "segment_count": 3,
+      "source_checksum": "src-v1",
+      "status": "已确认",
+      "confirmed": true,
+      "created_at": 1795560201.1093829
+    },
+    "2": {
+      "version": 2,
+      "file": "/workspace/data/track_segments/B-CASE_segments.2.jsonl",
+      "canonical_file": "/workspace/data/track_segments/B-CASE_segments.jsonl",
+      "segment_ids": [
+        "B1",
+        "B4"
+      ],
+      "segment_count": 2,
+      "source_checksum": "src-v2",
+      "status": "已审核",
+      "confirmed": true,
+      "created_at": 1795560201.1192772
+    }
+  },
+  "updated_at": 1795560201.1192791
+}

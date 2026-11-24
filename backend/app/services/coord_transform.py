@@ -66,7 +66,7 @@ class CoordTransformService(BaseModuleService):
             })
 
         output_file = self._data_dir("coord_transformed") / f"{batch_key}_transformed.jsonl"
-        written = self._write_jsonl(output_file, transformed)
+        written = self._write_jsonl_overwrite(output_file, transformed)
 
         # 更新记录条数
         if rule:
